@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS lecture;
+
+CREATE TABLE lecture (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  title VARCHAR(250) NOT NULL,
+  author VARCHAR(250) NOT NULL,
+  url VARCHAR(500) DEFAULT NULL,
+  created_date date DEFAULT NULL
+);
