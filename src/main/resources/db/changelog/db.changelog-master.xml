@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="1" author="Urmas Tamm">
+        <comment>Create lecture table</comment>
+
+        <createTable tableName="lecture">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="lecture_id_pk" />
+            </column>
+            <column name="author" type="varchar(100)" />
+            <column name="title" type="varchar(500)" />
+            <column name="url" type="varchar(500)" />
+            <column name="year" type="bigint" />
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

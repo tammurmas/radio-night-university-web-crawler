@@ -1,12 +1,14 @@
 package org.tamm.nightuni.model;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -15,10 +17,11 @@ import java.util.Date;
 @Entity(name = "Lecture")
 public class Lecture {
 
-    public Lecture(String title, String author, String url) {
+    public Lecture(String title, String author, String url, int year) {
         this.title = title;
         this.author = author;
         this.url = url;
+        this.year = year;
     }
 
     @Id
@@ -36,7 +39,11 @@ public class Lecture {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "created_date")
+    @Column(name = "\"year\"")
+    private Integer year;
+
+    @CreationTimestamp
+    @Column(name = "created_date", updatable = false)
     private Date createdDate = new Date();
 
 }
