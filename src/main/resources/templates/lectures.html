@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/shards.min.css">
 </head>
 <body>
-    <p class="my-5"><a href="/crawl" class="btn btn-primary">Start crawl</a></p>
+    <p class="my-5"><a th:href="@{/crawl}" class="btn btn-primary">Start crawl</a></p>
     <div th:switch="${lectures}" class="container my-5">
         <div class="row">
             <div class="col-md-6">
@@ -22,7 +22,7 @@
                         <tr>
                             <th>Author</th>
                             <th>Title</th>
-                            <th>Url</th>
+                            <th>URL</th>
                             <th>Year</th>
                         </tr>
                         </thead>
@@ -30,7 +30,7 @@
                         <tr th:each="lecture : ${lectures}">
                             <td th:text="${lecture.author}"></td>
                             <td th:text="${lecture.title}"></td>
-                            <td th:text="${lecture.url}"></td>
+                            <td><a th:href="${lecture.url}">view</a></td>
                             <td th:text="${lecture.year}"></td>
                         </tr>
                         </tbody>

@@ -20,7 +20,7 @@ public class LectureController {
 
     @GetMapping("/lectures")
     public String lectures(Model model) {
-        List<LectureDTO> lectures = lectureRepository.findAll().stream()
+        List<LectureDTO> lectures = lectureRepository.findAllByOrderByYearDesc().stream()
                 .map(LectureDTO::ofLecture)
                 .toList();
         model.addAttribute("lectures", lectures);

@@ -28,7 +28,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     private static final Logger logger = LoggerFactory.getLogger(CrawlerService.class);
 
     private static final String NIGHT_UNIVERSITY_URL = "http://www.ylikool.ee/";
-    private static final String LEFT_MENU_DIV_CSS_CLASS = "menuleft";
+    private static final String DIV_MENU_LEFT_CSS_CLASS = "div.menuleft";
     private static final String CONTENT_DIV_CSS_CLASS = "content";
     private static final String URL_PART_OY = "/OY";
     private static final String TAG_NAME_A = "a";
@@ -42,21 +42,27 @@ public class CrawlerServiceImpl implements CrawlerService {
     @Override
     public void crawl() {
         try {
+            lectureRepository.deleteAll();
             Document doc = Jsoup.connect(NIGHT_UNIVERSITY_URL).get();
             logger.debug(doc.toString());
-            Element lecturesDiv = doc.body().select("div." + LEFT_MENU_DIV_CSS_CLASS).stream()
-                    .findAny()
-                    .orElseThrow(() -> new RuntimeException("No element found with css class attribute: " + LEFT_MENU_DIV_CSS_CLASS));
-            Elements links = lecturesDiv.getElementsByTag("a");
-            List<Lecture> lectures = new ArrayList<>();
-            for (Element link : links) {
-                lectures.addAll(findLecturesByLink(link));
-            }
+            List<Lecture> lectures = findLectures(doc);
             lectureRepository.saveAll(lectures);
             logger.info("Crawl finished, number of lectures={}", lectures.size());
         } catch (IOException e) {
             throw new RuntimeException("Could not connect to: " + NIGHT_UNIVERSITY_URL);
         }
+    }
+
+    private List<Lecture> findLectures(Document doc) {
+        Element lecturesDiv = doc.body().select(DIV_MENU_LEFT_CSS_CLASS).stream()
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("No element found with css class attribute: " + DIV_MENU_LEFT_CSS_CLASS));
+        Elements links = lecturesDiv.getElementsByTag(TAG_NAME_A);
+        List<Lecture> lectures = new ArrayList<>();
+        for (Element link : links) {
+            lectures.addAll(findLecturesByLink(link));
+        }
+        return lectures;
     }
 
     private List<Lecture> findLecturesByLink(Element link) {
@@ -72,7 +78,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .filter(lectureLink -> !lectureLink.text().equals(LINK_TEXT_MP_3) && !lectureLink.text().equals(LINK_TEXT_RAM)).toList();
             lectures = lectureLinks.stream()
                     .map(lectureLink -> new Lecture(lectureLink.text(), authorName, lectureLink.attr(ATTRIBUTE_HREF),
-                            getYearFromUrl(lectureLink.attr(ATTRIBUTE_HREF))))
+                            findYearFromUrl(lectureLink.attr(ATTRIBUTE_HREF))))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             logger.warn("Could not get contents of: {}", authorLinkHref);
@@ -80,7 +86,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         return lectures;
     }
 
-    private static Integer getYearFromUrl(String url) {
+    private static Integer findYearFromUrl(String url) {
         logger.debug("Parsing URL={}", url);
         String[] urlParts = url.split(URL_PART_OY);
         Integer year = null;
