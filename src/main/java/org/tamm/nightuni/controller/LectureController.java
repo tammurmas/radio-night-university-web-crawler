@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.tamm.nightuni.repository.LectureRepository;
 import org.tamm.nightuni.repository.dto.LectureDTO;
 import org.tamm.nightuni.service.CrawlerService;
@@ -27,8 +28,8 @@ public class LectureController {
         return "lectures";
     }
 
-    @GetMapping("/crawl")
-    public String index(Model model) {
+    @PostMapping("/crawl")
+    public String index() {
         crawlerService.crawl();
         return "index";
     }

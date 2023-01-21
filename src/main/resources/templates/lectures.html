@@ -10,32 +10,33 @@
     <link rel="stylesheet" href="../css/shards.min.css">
 </head>
 <body>
-    <p class="my-5"><a th:href="@{/crawl}" class="btn btn-primary">Start crawl</a></p>
-    <div th:switch="${lectures}" class="container my-5">
+    <div class="container my-5">
         <div class="row">
             <div class="col-md-6">
-                <h2 th:case="null">No lectures yet!</h2>
-                <div th:case="*">
-                    <h2 class="my-5">Lectures</h2>
-                    <table class="table table-striped table-responsive-md">
-                        <thead>
-                        <tr>
-                            <th>Author</th>
-                            <th>Title</th>
-                            <th>URL</th>
-                            <th>Year</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="lecture : ${lectures}">
-                            <td th:text="${lecture.author}"></td>
-                            <td th:text="${lecture.title}"></td>
-                            <td><a th:href="${lecture.url}">view</a></td>
-                            <td th:text="${lecture.year}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h2 class="my-5">Lectures</h2>
+                <p>
+                    <form th:action="@{/crawl}" method="post">
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Start crawl and rewrite existing data?');">Start crawl</button>
+                    </form>
+                </p>
+                <table class="table table-striped table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th>Author</th>
+                        <th>Title</th>
+                        <th>URL</th>
+                        <th>Year</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lecture : ${lectures}">
+                        <td th:text="${lecture.author}"></td>
+                        <td th:text="${lecture.title}"></td>
+                        <td><a th:href="${lecture.url}">view</a></td>
+                        <td th:text="${lecture.year}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
